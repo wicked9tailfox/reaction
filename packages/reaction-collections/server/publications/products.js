@@ -55,7 +55,7 @@ const filters = new SimpleSchema({
     type: String,
     optional: true
   },
-  "detail": {
+  "variants": {
     type: String,
     optional: true
   }
@@ -81,7 +81,7 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
   }
   let selector = {};
   if (shop) {
-    if (productFilters.detail !== "true") {
+    if (productFilters.variants !== "true") {
       selector = {
         ancestors: {
           $exists: true,
@@ -230,7 +230,7 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
       selector.isVisible = true;
     }
 
-    if (productFilters.detail === "true") {
+    if (productFilters.variants === "true") {
       const productResults = Products.find(selector, {
         sort: sort,
         limit: productScrollLimit
