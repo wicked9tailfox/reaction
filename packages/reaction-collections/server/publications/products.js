@@ -236,17 +236,20 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
         limit: productScrollLimit
       }).fetch();
 
+      let clauses = [];
       for (product of productResults) {
-        selector = {
-          $or: [{
-            _id: product._id
-          }, {
-            ancestors: {
-              $in: [product._id]
-            }
-          }]
-        };
+        clauses.push({
+          _id: product._id
+        });
+        clauses.push({
+          ancestors: {
+            $in: [product._id]
+          }
+        });
       }
+      selector = {
+        $or: clauses
+      };
     }
 
     return Products.find(selector, {
