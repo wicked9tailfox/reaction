@@ -54,6 +54,10 @@ const filters = new SimpleSchema({
   "weight.max": {
     type: String,
     optional: true
+  },
+  "detail": {
+    type: String,
+    optional: true
   }
 });
 
@@ -75,15 +79,17 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
   if (typeof shop !== "object") {
     return this.ready();
   }
-
+  let selector = {};
   if (shop) {
-    let selector = {
-      ancestors: {
-        $exists: true,
-        $eq: []
-      },
-      shopId: shop._id
-    };
+    if (productFilters.detail !== "true") {
+      selector = {
+        ancestors: {
+          $exists: true,
+          $eq: []
+        },
+        shopId: shop._id
+      };
+    }
 
     if (productFilters) {
       // handle multiple shops
@@ -222,6 +228,25 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
     // products are always visible to owners
     if (!(Roles.userIsInRole(this.userId, ["owner"], shop._id) || shopAdmin)) {
       selector.isVisible = true;
+    }
+
+    if (productFilters.detail === "true") {
+      const productResults = Products.find(selector, {
+        sort: sort,
+        limit: productScrollLimit
+      }).fetch();
+
+      for (product of productResults) {
+        selector = {
+          $or: [{
+            _id: product._id
+          }, {
+            ancestors: {
+              $in: [product._id]
+            }
+          }]
+        };
+      }
     }
 
     return Products.find(selector, {
