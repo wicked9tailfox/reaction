@@ -13,15 +13,12 @@ Fixtures();
 //generate second shop
 describe("Permissions for Multi Shop", function () {
     describe.only("Validate Admin permissions", function () {
-        const shopId = getShop()._id;
-        const shopName = getShop().name;
-        console.log(getShop());
-        const sessionId = Random.id();
         it("verify permissions against roles", function (done) {
+            const shopId = getShop()._id;
             const fakeUser = Factory.create("user");
             let roles = [];
-            Roles.addUsersToRoles(fakeUser._id, 'admin', Roles.GLOBAL_GROUP);
-            expect(Roles.userIsInRole(fakeUser._id, 'admin', Roles.GLOBAL_GROUP)).to.be.true;
+            Roles.addUsersToRoles(fakeUser._id, 'admin', shopId);
+            expect(Roles.userIsInRole(fakeUser._id, 'admin', shopId)).to.be.true;
 
             console.log(roles);
             var x;
