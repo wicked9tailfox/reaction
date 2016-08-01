@@ -12,41 +12,26 @@ Fixtures();
 
 //generate second shop
 describe("Permissions for Multi Shop", function () {
-    describe("Validate Admin permissions", function () {
+    describe.only("Validate Admin permissions", function () {
         const shopId = getShop()._id;
         const shopName = getShop().name;
         console.log(getShop());
-        const fakeUser = Factory.create("account");
         const sessionId = Random.id();
         it("verify permissions against roles", function (done) {
-            //console.log("shopID =" + shopId);
-            console.log("accountInfo=" + fakeUser._id);
-            //console.log(getUser().username);
-            let names = [];
-            function roleNames(callback) {
-                Roles.addUsersToRoles(fakeUser._id, 'admin', Roles.GLOBAL_GROUP);
-                //expect(Roles.userIsInRole(fakeUser._id, 'admin', shopId)).to.be.true;
-                //const user = Meteor.users.findOne(fakeUser._id);
-                callback(expect(Roles.userIsInRole(fakeUser._id, 'admin', Roles.GLOBAL_GROUP)).to.be.true);
+            const fakeUser = Factory.create("user");
+            let roles = [];
+            Roles.addUsersToRoles(fakeUser._id, 'admin', Roles.GLOBAL_GROUP);
+            expect(Roles.userIsInRole(fakeUser._id, 'admin', Roles.GLOBAL_GROUP)).to.be.true;
 
-                console.log("user", fakeUser);
-            }
-            console.log(roleNames());
-            //names.push(roleNames);
-            console.log(names);
+            console.log(roles);
             var x;
-            for (x in names) {
+            for (x in roles) {
                 console.log(x);
                 expect(Reaction.hasPermission([x], fakeUser, shopId)).to.be.true;
             }
                 return done();
             });
         });
-
-        it("", function (done) {
-// create additional user
-                return done();
-            });
 });
 
 
