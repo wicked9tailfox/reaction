@@ -9,7 +9,7 @@ Fixtures();
 
 // generate second shop
 describe("Core permissions test", function () {
-  describe.only("Validate User permissions", function () {
+  describe.only("Validate Core User permissions", function () {
 
     beforeEach(function () {
       sandbox = sinon.sandbox.create();
@@ -19,7 +19,7 @@ describe("Core permissions test", function () {
       sandbox.restore();
     });
 
-    it("shop/updateShopExternalServices", function () {
+    it("shop/updateShopExternalServices should return 403", function () {
       const shopId = getShop()._id;
       const fakeUser = Factory.create("user");
       // pull 'core' from the db
