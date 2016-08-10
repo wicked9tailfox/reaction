@@ -14,9 +14,11 @@ describe("Core permissions test", function () {
     let sandbox;
     let originals;
     const packageData = {"$set": {
-      "settings.openexchangerates.appId": "c102629388344603bd34c150a66291aa",
+      "settings.openexchangerates.appId": "fake",
       "settings.openexchangerates.refreshPeriod": "Every 1 hours"
     }};
+    const shopId = getShop()._id;
+    const fakeUser = Factory.create("user");
 
     before(function () {
       originals = {
@@ -41,9 +43,6 @@ describe("Core permissions test", function () {
     }
 
     it("shop/updateShopExternalServices should return 403", function () {
-      const shopId = getShop()._id;
-      const fakeUser = Factory.create("user");
-      // pull 'core' from the db
       Roles.addUsersToRoles(fakeUser._id, "fake", shopId);
       let updatePackagesSpy = sandbox.spy(Packages, "update");
       spyOnMethod("updateShopExternalServices", fakeUser._id);
@@ -51,6 +50,16 @@ describe("Core permissions test", function () {
         Meteor.call("shop/updateShopExternalServices", packageData, "fake");
       }).to.throw(Meteor.Error, /Access Denied/);
       expect(updatePackagesSpy).to.not.have.been.called;
+    });
+
+    it("shop/updateShopExternalServices should execute when you have core permissions", function () {
+      Roles.addUsersToRoles(fakeUser._id, "core", shopId);
+      let updatePackagesSpy = sandbox.spy(Packages, "update");
+      spyOnMethod("updateShopExternalServices", fakeUser._id);
+      expect(() => {
+        Meteor.call("shop/updateShopExternalServices", packageData, "fake");
+      }).to.not.throw(Meteor.Error, /Access Denied/);
+      expect(updatePackagesSpy).to.have.been.called;
     });
   });
 });
