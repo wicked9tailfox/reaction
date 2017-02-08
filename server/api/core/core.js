@@ -203,8 +203,18 @@ export default {
     return settings.settings || {};
   },
 
-  getPackageSettings(name) {
-    return Packages.findOne({ packageName: name, shopId: this.getShopId() }) || null;
+  /**
+   * @summary Returns the settings for a package
+   * @param {String} name - the name of the package in the register.js
+   * @param {Boolean} enabled - Whether to look for enabled packages or not
+   * @returns {Object|null} - The Package object or null
+   */
+  getPackageSettings(name, enabled = true) {
+    return Packages.findOne({
+      name,
+      enabled,
+      shopId: this.getShopId()
+    }) || null;
   },
 
   /**
