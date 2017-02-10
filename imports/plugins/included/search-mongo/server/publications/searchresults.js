@@ -8,10 +8,13 @@ const supportedCollections = ["products", "orders", "accounts"];
 
 function getProductFindTerm(searchTerm, searchTags, userId) {
   const shopId = Reaction.getShopId();
-  const findTerm = {
+  const findTerm = _.assign({
     shopId: shopId,
     $text: { $search: searchTerm }
-  };
+  }, {
+    isDeleted: { $in: [false, null] }
+  });
+
   if (searchTags.length) {
     findTerm.hashtags = { $all: searchTags };
   }

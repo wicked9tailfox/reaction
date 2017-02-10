@@ -69,6 +69,9 @@ Products.after.update((userId, doc, fieldNames) => {
     if (modifiedFields.length) {
       Logger.debug(`Rewriting search record for ${doc.title}`);
       ProductSearch.remove(productId);
+      // if (!_.includes(modifiedFields, "isDeleted")) {
+      //   buildProductSearchRecord(productId);
+      // } can't do this. It always include isDeleted
       buildProductSearchRecord(productId);
     } else {
       Logger.debug("No watched fields modified, skipping");

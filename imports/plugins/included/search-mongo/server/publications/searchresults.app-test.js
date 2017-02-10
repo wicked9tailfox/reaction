@@ -109,6 +109,16 @@ describe("Search results", function () {
       const numResults = results.count();
       expect(numResults).to.equal(0);
     });
+
+    it("should not show archived product", function () {
+      // const productId = createProduct(false, "isINVisible");
+      // buildProductSearchRecord(productId);
+      // product = Products.findOne(productId);
+      // const searchTerm = product.title;
+      // const results = getResults.products(searchTerm);
+      // const numResults = results.count();
+      // expect(numResults).to.equal(0);
+    });
   });
 });
 
